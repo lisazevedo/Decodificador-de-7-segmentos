@@ -1,28 +1,39 @@
+`timescale 1 ns / 100 ps
+
 module tb_decoder;
 
-reg clk, rst_n, 
+reg clk_t, rst_nt; 
 reg [3:0] dec_in;
 
 wire [6:0] dec_out;
 
+fpga1 fpga1_u0 (
+	
+	.clk(clk_t),
+	.rst_n(rst_nt),
+	.entrada(dec_in),
+	.saida(dec_out)
+);
+
 initial begin
-	clk = 0;
-	rst_n = 1;
+	clk_t = 0;
+	rst_nt = 1;
 	dec_in = 4'd0;
 	
-	@(negedge)
-	rst_n=1;
-	@(negedge)
-	rst_n=0;
+	@(negedge clk_t);
+		rst_nt=0;
+	
+	@(negedge clk_t);
+		rst_nt=1;
 	
 	repeat(10) begin
-		@(negedge)
+		@(negedge clk_t);
 	end
-	$stop
+	$stop;
 end
 
 always begin 
-	#5 clk =~clk;
+	#5 clk_t =~clk_t;
 	
 end
 
